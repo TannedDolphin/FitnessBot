@@ -24,6 +24,7 @@ const handleAuthError = (error, res) => {
 
   if (
     error.message === "Email already exists" ||
+    error.message === "Username already exists" ||
     error.message === "Invalid email or password"
   ) {
     return res.status(400).json({ error: error.message });

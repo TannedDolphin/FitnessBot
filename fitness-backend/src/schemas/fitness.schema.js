@@ -6,7 +6,16 @@ export const fitnessProfileSchema = z.object({
   age: z.coerce.number().int().min(13).max(100),
   weight: z.coerce.number().positive().min(25).max(300),
   height: z.coerce.number().positive().min(100).max(250),
+  gender: z.enum(["male", "female", "other"]),
   fitnessLevel: z.enum(["beginner", "intermediate", "advanced"]),
+  activityLevel: z.enum([
+    "sedentary",
+    "lightly_active",
+    "moderately_active",
+    "very_active",
+    "extremely_active",
+  ]),
+  trainingDaysPerWeek: z.coerce.number().int().min(1).max(7),
   goals: z.array(z.string().trim().min(1)).min(1),
   restrictions: z.string().trim().optional().default(""),
 });
@@ -128,8 +137,8 @@ export const generatedPlansJsonSchema = {
         },
         meals: {
           type: "array",
-          minItems: 5,
-          maxItems: 6,
+          minItems: 3,
+          maxItems: 8,
           items: {
             type: "object",
             additionalProperties: false,

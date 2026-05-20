@@ -10,6 +10,69 @@ const stripJsonFence = (text) =>
     .replace(/\s*```$/i, "")
     .trim();
 
+export const extractJsonObject = (text) => {
+  const cleaned = stripJsonFence(String(text ?? ""));
+
+  if (!cleaned) {
+    throw new SyntaxError("Empty AI response");
+  }
+
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    // Fallback: extract first top-level JSON object from any extra text around it
+    const start = cleaned.indexOf("{");
+    if (start === -1) {
+      throw new SyntaxError("No JSON object found in AI response");
+    }
+
+    let depth = 0;
+    let inString = false;
+    let escape = false;
+
+    for (let i = start; i < cleaned.length; i += 1) {
+      const char = cleaned[i];
+
+      if (escape) {
+        escape = false;
+        continue;
+      }
+
+      if (char === "\\") {
+        escape = true;
+        continue;
+      }
+
+      if (char === '"') {
+        inString = !inString;
+        continue;
+      }
+
+      if (inString) {
+        continue;
+      }
+
+      if (char === "{") {
+        depth += 1;
+      }
+
+      if (char === "}") {
+        depth -= 1;
+        if (depth === 0) {
+          const candidate = cleaned.slice(start, i + 1);
+          try {
+            return JSON.parse(candidate);
+          } catch {
+            break;
+          }
+        }
+      }
+    }
+
+    throw new SyntaxError("Unable to parse JSON from AI response");
+  }
+};
+
 const toHHMM = (value, fallback) => {
   if (typeof value !== "string") {
     return fallback;
@@ -87,21 +150,21 @@ const normalizeMeals = (meals) => {
   });
 };
 
-const normalizePlans = (plans) => {
+const normalizePlans = (plans, trainingDays) => {
   const sourceDays =
     Array.isArray(plans?.workoutPlan?.days) && plans.workoutPlan.days.length > 0
       ? plans.workoutPlan.days
-      : [{ day: "Thu Hai", exercises: fallbackExercises }];
+      : [{ day: "Ngay 1", exercises: fallbackExercises }];
 
   return {
     workoutPlan: {
-      days: sourceDays.slice(0, 7).map((rawDay, dayIndex) => {
+      days: sourceDays.slice(0, trainingDays || 7).map((rawDay, dayIndex) => {
         const day = rawDay || {};
 
         return {
-        id: day.id || `day-${dayIndex + 1}`,
-        day: String(day.day || `Ngay ${dayIndex + 1}`),
-        exercises: normalizeExercises(day.exercises, dayIndex),
+          id: day.id || `day-${dayIndex + 1}`,
+          day: String(day.day || `Ngay ${dayIndex + 1}`),
+          exercises: normalizeExercises(day.exercises, dayIndex),
         };
       }),
     },
@@ -126,7 +189,7 @@ The JSON must match this frontend shape exactly:
     "days": [
       {
         "id": "day-1",
-        "day": "Thu Hai",
+        "day": "Ngay 1",
         "exercises": [
           { "id": "ex-1-1", "name": "Squat", "sets": 3, "reps": "10-12", "rest": "60s" }
         ]
@@ -143,12 +206,17 @@ The JSON must match this frontend shape exactly:
 }
 
 Rules:
-- Return JSON only. No markdown. No explanations.
+- Return only the raw JSON object exactly as shown. No markdown, no code fences, no explanations, no extra text.
+- Do not include any text before or after the JSON object.
 - Use Vietnamese names without accents if needed for compatibility.
-- Create 3 to 5 workout days, each with 3 to 5 exercises.
+- Use day names as "Ngay 1", "Ngay 2", etc., NOT weekday names.
+- Create EXACTLY ${profile.trainingDaysPerWeek} workout days based on user's trainingDaysPerWeek.
+- Each day should have 3 to 5 exercises matching the fitness level and goals.
 - Use ids like day-1, ex-1-1, meal-1.
 - Meal time must be 24-hour HH:mm.
 - Respect injuries, dietary restrictions, and goals.
+- Adjust training intensity based on fitnessLevel (${profile.fitnessLevel}) and activityLevel (${profile.activityLevel}).
+- Adjust calories based on age, weight, height, gender, and activity level.
 - Keep recommendations safe and realistic for the user's fitness level.
 - Do not prescribe medical treatment.
 
@@ -172,11 +240,41 @@ export const generateFitnessPlans = async (rawProfile) => {
       type: "json_object",
     },
     maxTokens: 3000,
-    temperature: 0.25,
+    temperature: 0.0,
   });
 
-  const parsed = JSON.parse(stripJsonFence(text));
-  const plans = generatedPlansSchema.parse(normalizePlans(parsed));
+  let parsed;
+
+  try {
+    parsed = extractJsonObject(text);
+  } catch (error) {
+    console.error("Invalid AI JSON response:", text);
+
+    const repairMessages = [
+      {
+        role: "system",
+        content:
+          "You are a JSON repair assistant. Return only a valid JSON object with no markdown, no extra text, and no explanations.",
+      },
+      {
+        role: "user",
+        content: `The previous AI response was invalid JSON. Fix it and return only the corrected JSON object.\n\nInvalid response:\n${text}`,
+      },
+    ];
+
+    const repairResult = await chatWithCohere({
+      messages: repairMessages,
+      responseFormat: {
+        type: "json_object",
+      },
+      maxTokens: 1200,
+      temperature: 0.0,
+    });
+
+    parsed = extractJsonObject(repairResult.text);
+  }
+
+  const plans = generatedPlansSchema.parse(normalizePlans(parsed, profile.trainingDaysPerWeek));
 
   return {
     ...plans,

@@ -23,14 +23,30 @@ export const registerUser = async ({ name, email, password }) => {
     throw new Error("Email already exists");
   }
 
+  const username = normalizedEmail;
   const passwordHash = await bcrypt.hash(password, 10);
-  const user = await User.create({
-    name: name.trim(),
-    email: normalizedEmail,
-    passwordHash,
-  });
 
-  return toPublicUser(user);
+  try {
+    const user = await User.create({
+      name: name.trim(),
+      email: normalizedEmail,
+      username,
+      passwordHash,
+    });
+
+    return toPublicUser(user);
+  } catch (error) {
+    if (error?.code === 11000) {
+      if (error.message?.includes("email_1") || error.message?.includes("email")) {
+        throw new Error("Email already exists");
+      }
+      if (error.message?.includes("username_1") || error.message?.includes("username")) {
+        throw new Error("Username already exists");
+      }
+      throw new Error("Duplicate user record");
+    }
+    throw error;
+  }
 };
 
 export const loginUser = async ({ email, password }) => {

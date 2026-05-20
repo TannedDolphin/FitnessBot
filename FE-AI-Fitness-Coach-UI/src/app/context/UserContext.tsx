@@ -86,16 +86,70 @@ const storedUserData = () => {
   }
 };
 
+const storedFitnessProfile = () => {
+  try {
+    const value = window.localStorage.getItem("fitai_fitness_profile");
+    return value ? (JSON.parse(value) as FitnessProfile) : null;
+  } catch {
+    return null;
+  }
+};
+
+const storedWorkoutPlan = () => {
+  try {
+    const value = window.localStorage.getItem("fitai_workout_plan");
+    return value ? (JSON.parse(value) as WorkoutPlan) : null;
+  } catch {
+    return null;
+  }
+};
+
+const storedNutritionPlan = () => {
+  try {
+    const value = window.localStorage.getItem("fitai_nutrition_plan");
+    return value ? (JSON.parse(value) as NutritionPlan) : null;
+  } catch {
+    return null;
+  }
+};
+
 export function UserProvider({ children }: { children: ReactNode }) {
   const [userData, setUserDataState] = useState<UserData | null>(storedUserData);
-  const [fitnessProfile, setFitnessProfile] = useState<FitnessProfile | null>(null);
-  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
-  const [nutritionPlan, setNutritionPlan] = useState<NutritionPlan | null>(null);
+  const [fitnessProfile, setFitnessProfileState] = useState<FitnessProfile | null>(storedFitnessProfile);
+  const [workoutPlan, setWorkoutPlanState] = useState<WorkoutPlan | null>(storedWorkoutPlan);
+  const [nutritionPlan, setNutritionPlanState] = useState<NutritionPlan | null>(storedNutritionPlan);
   const [progressHistory, setProgressHistory] = useState<ProgressData[]>([]);
 
   const setUserData = (data: UserData) => {
     setUserDataState(data);
     window.localStorage.setItem("fitai_user", JSON.stringify(data));
+  };
+
+  const setFitnessProfileData = (profile: FitnessProfile | null) => {
+    setFitnessProfileState(profile);
+    if (profile) {
+      window.localStorage.setItem("fitai_fitness_profile", JSON.stringify(profile));
+    } else {
+      window.localStorage.removeItem("fitai_fitness_profile");
+    }
+  };
+
+  const setWorkoutPlanData = (plan: WorkoutPlan | null) => {
+    setWorkoutPlanState(plan);
+    if (plan) {
+      window.localStorage.setItem("fitai_workout_plan", JSON.stringify(plan));
+    } else {
+      window.localStorage.removeItem("fitai_workout_plan");
+    }
+  };
+
+  const setNutritionPlanData = (plan: NutritionPlan | null) => {
+    setNutritionPlanState(plan);
+    if (plan) {
+      window.localStorage.setItem("fitai_nutrition_plan", JSON.stringify(plan));
+    } else {
+      window.localStorage.removeItem("fitai_nutrition_plan");
+    }
   };
 
   const addProgress = (progress: ProgressData) => {
@@ -104,7 +158,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   // Workout CRUD operations
   const addExercise = (dayId: string, exercise: Omit<Exercise, 'id'>) => {
-    setWorkoutPlan(prev => {
+    setWorkoutPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -118,7 +172,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const updateExercise = (dayId: string, exerciseId: string, exercise: Omit<Exercise, 'id'>) => {
-    setWorkoutPlan(prev => {
+    setWorkoutPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -137,7 +191,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteExercise = (dayId: string, exerciseId: string) => {
-    setWorkoutPlan(prev => {
+    setWorkoutPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -151,7 +205,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const addWorkoutDay = (day: Omit<WorkoutDay, 'id'>) => {
-    setWorkoutPlan(prev => {
+    setWorkoutPlanState(prev => {
       if (!prev) return { days: [{ ...day, id: Date.now().toString() }] };
       return {
         ...prev,
@@ -161,7 +215,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const updateWorkoutDay = (dayId: string, day: Omit<WorkoutDay, 'id' | 'exercises'>) => {
-    setWorkoutPlan(prev => {
+    setWorkoutPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -173,7 +227,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteWorkoutDay = (dayId: string) => {
-    setWorkoutPlan(prev => {
+    setWorkoutPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -184,7 +238,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   // Nutrition CRUD operations
   const addMeal = (meal: Omit<Meal, 'id'>) => {
-    setNutritionPlan(prev => {
+    setNutritionPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -194,7 +248,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const updateMeal = (mealId: string, meal: Omit<Meal, 'id'>) => {
-    setNutritionPlan(prev => {
+    setNutritionPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -206,7 +260,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteMeal = (mealId: string) => {
-    setNutritionPlan(prev => {
+    setNutritionPlanState(prev => {
       if (!prev) return prev;
       return {
         ...prev,
@@ -221,11 +275,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
         userData,
         setUserData,
         fitnessProfile,
-        setFitnessProfile,
+        setFitnessProfile: setFitnessProfileData,
         workoutPlan,
-        setWorkoutPlan,
+        setWorkoutPlan: setWorkoutPlanData,
         nutritionPlan,
-        setNutritionPlan,
+        setNutritionPlan: setNutritionPlanData,
         progressHistory,
         addProgress,
         addExercise,

@@ -22,15 +22,23 @@ const getClient = () => {
 export const extractText = (response) => {
   const content = response?.message?.content;
 
-  if (!Array.isArray(content)) {
-    return "";
+  if (Array.isArray(content)) {
+    return content
+      .filter((item) => item?.type === "text" && typeof item.text === "string")
+      .map((item) => item.text)
+      .join("")
+      .trim();
   }
 
-  return content
-    .filter((item) => item?.type === "text" && typeof item.text === "string")
-    .map((item) => item.text)
-    .join("")
-    .trim();
+  if (typeof content === "string") {
+    return content.trim();
+  }
+
+  if (typeof content === "object" && content !== null) {
+    return JSON.stringify(content).trim();
+  }
+
+  return "";
 };
 
 export const chatWithCohere = async ({
