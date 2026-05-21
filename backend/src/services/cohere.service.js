@@ -9,7 +9,7 @@ const getClient = () => {
   const token = process.env.COHERE_API_KEY || process.env.CO_API_KEY;
 
   if (!token) {
-    throw new Error("Missing COHERE_API_KEY. Add it to fitness-backend/.env.");
+    throw new Error("Missing COHERE_API_KEY. Add it to .env.");
   }
 
   if (!client) {
@@ -19,23 +19,45 @@ const getClient = () => {
   return client;
 };
 
+const cleanText = (text = "") => {
+  return text
+    // remove markdown
+    .replace(/\*\*/g, "")
+    .replace(/#{1,6}/g, "")
+    .replace(/`{3,}/g, "")
+    .replace(/-{3,}/g, "")
+    .replace(/\. /g, ".\n\n")
+    .replace(/\. /g, ".\n\n")
+    // remove excessive new lines
+    .replace(/\n{3,}/g, "\n\n")
+
+    // remove spaces
+    .trim();
+};
+
 export const extractText = (response) => {
   const content = response?.message?.content;
 
+  // Most common case
   if (Array.isArray(content)) {
-    return content
-      .filter((item) => item?.type === "text" && typeof item.text === "string")
-      .map((item) => item.text)
-      .join("")
+    const text = content
+      .filter((item) => {
+        // ONLY KEEP REAL TEXT
+        return (
+          item?.type === "text" ||
+          item?.type === "output_text"
+        );
+      })
+      .map((item) => item.text || "")
+      .join("\n")
       .trim();
+
+    return cleanText(text);
   }
 
+  // fallback
   if (typeof content === "string") {
-    return content.trim();
-  }
-
-  if (typeof content === "object" && content !== null) {
-    return JSON.stringify(content).trim();
+    return cleanText(content);
   }
 
   return "";
@@ -44,10 +66,11 @@ export const extractText = (response) => {
 export const chatWithCohere = async ({
   messages,
   responseFormat,
-  maxTokens = 1200,
-  temperature = 0.35,
+  maxTokens = 180,
+  temperature = 0.4,
 }) => {
   const model = getCohereModel();
+
   const response = await getClient().chat({
     model,
     messages,

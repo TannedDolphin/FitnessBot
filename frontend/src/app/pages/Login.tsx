@@ -140,6 +140,11 @@ export default function Login() {
                 Dang ky ngay
               </Link>
             </div>
+            <div className="mt-3 text-center text-sm text-gray-400">
+              <Link to="/forgot-password" className="text-blue-400 hover:text-blue-300 font-semibold">
+                Quen mat khau?
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>

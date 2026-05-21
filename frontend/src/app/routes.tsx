@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
 import Register from "./pages/Register";
 import Onboarding from "./pages/Onboarding";
 import FitnessProfile from "./pages/FitnessProfile";
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: Login,
+  },
+  {
+    path: "/forgot-password",
+    Component: ForgotPassword,
   },
   {
     path: "/register",

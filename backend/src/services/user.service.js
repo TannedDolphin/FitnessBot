@@ -69,6 +69,41 @@ export const loginUser = async ({ email, password }) => {
   return toPublicUser(user);
 };
 
+export const requestPasswordReset = async ({ email }) => {
+  if (!isMongoReady()) {
+    throw new Error("MongoDB is not connected");
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  await User.findOne({ email: normalizedEmail });
+
+  // In a full implementation, send an email with a reset link or token here.
+  return;
+};
+
+export const changeUserPassword = async ({ email, currentPassword, newPassword }) => {
+  if (!isMongoReady()) {
+    throw new Error("MongoDB is not connected");
+  }
+
+  const user = await User.findOne({ email: email.trim().toLowerCase() });
+
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
+
+  const isValidPassword = await bcrypt.compare(currentPassword, user.passwordHash);
+
+  if (!isValidPassword) {
+    throw new Error("Invalid email or password");
+  }
+
+  user.passwordHash = await bcrypt.hash(newPassword, 10);
+  await user.save();
+
+  return toPublicUser(user);
+};
+
 export const getLatestUserPlan = async (userId) => {
   if (!isMongoReady() || !userId) {
     return null;

@@ -7,7 +7,7 @@ export const generatePlans = async (req, res) => {
   try {
     const profile = req.body?.fitnessProfile ?? req.body;
     const parsedProfile = fitnessProfileSchema.parse(profile);
-    const plans = await generateFitnessPlans(parsedProfile);
+    const plans = await generateFitnessPlans(parsedProfile, req.body?.userData);
     const saved = await saveGeneratedPlan({
       userId: req.body?.userId,
       userData: req.body?.userData,

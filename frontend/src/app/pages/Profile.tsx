@@ -8,6 +8,7 @@ import { useUser } from "../context/UserContext";
 import { User, LogOut, Lock } from "lucide-react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { postJson } from "../lib/api";
 
 export default function Profile() {
   const { userData, fitnessProfile } = useUser();
@@ -15,17 +16,44 @@ export default function Profile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!userData?.email) {
+      toast.error("Vui lòng đăng nhập trước khi đổi mật khẩu.");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       toast.error("Mật khẩu mới không khớp!");
       return;
     }
-    toast.success("Mật khẩu đã được thay đổi thành công!");
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+
+    if (newPassword.length < 6) {
+      toast.error("Mật khẩu mới phải có tối thiểu 6 ký tự.");
+      return;
+    }
+
+    setIsChangingPassword(true);
+
+    try {
+      await postJson("/api/users/change-password", {
+        email: userData.email,
+        currentPassword,
+        newPassword,
+      });
+
+      toast.success("Mật khẩu đã được thay đổi thành công!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Đổi mật khẩu thất bại.");
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
 
   const handleLogout = () => {
@@ -134,8 +162,8 @@ export default function Profile() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Cập nhật mật khẩu
+              <Button type="submit" className="w-full" disabled={isChangingPassword}>
+                {isChangingPassword ? "Đang cập nhật..." : "Cập nhật mật khẩu"}
               </Button>
             </form>
           </CardContent>

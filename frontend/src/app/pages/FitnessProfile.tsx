@@ -42,7 +42,6 @@ export default function FitnessProfile() {
   const [height, setHeight] = useState("");
   const [gender, setGender] = useState("");
   const [fitnessLevel, setFitnessLevel] = useState("");
-  const [activityLevel, setActivityLevel] = useState("");
   const [trainingDaysPerWeek, setTrainingDaysPerWeek] = useState("");
   const [goals, setGoals] = useState<string[]>([]);
   const [restrictions, setRestrictions] = useState("");
@@ -89,11 +88,6 @@ export default function FitnessProfile() {
       return;
     }
 
-    if (!activityLevel) {
-      setError("Vui long chon muc do van dong.");
-      return;
-    }
-
     if (
       !isPositiveNumber(trainingDaysPerWeek) ||
       parseInt(trainingDaysPerWeek) > 7
@@ -113,7 +107,6 @@ export default function FitnessProfile() {
       height: parseFloat(height),
       gender,
       fitnessLevel,
-      activityLevel,
       trainingDaysPerWeek: parseInt(trainingDaysPerWeek),
       goals,
       restrictions,
@@ -285,48 +278,6 @@ export default function FitnessProfile() {
 
                     <SelectItem value="advanced">
                       Nang cao - Co kinh nghiem tap luyen
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Activity Level */}
-              <div className="space-y-2">
-                <Label htmlFor="activity-level" className="text-gray-200">
-                  Muc do van dong hang ngay
-                </Label>
-
-                <Select
-                  value={activityLevel}
-                  onValueChange={setActivityLevel}
-                >
-                  <SelectTrigger
-                    id="activity-level"
-                    className="bg-gray-800/50 border-gray-700 text-white"
-                  >
-                    <SelectValue placeholder="Chon muc do van dong" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectItem value="sedentary">
-                      Ap luc thap - Lam viec van phong, it van dong
-                    </SelectItem>
-
-                    <SelectItem value="lightly_active">
-                      Ap luc trung binh - Van dong nhe, tap 1-3 lan/tuan
-                    </SelectItem>
-
-                    <SelectItem value="moderately_active">
-                      Ap luc trung - Van dong vua phai, tap 3-5 lan/tuan
-                    </SelectItem>
-
-                    <SelectItem value="very_active">
-                      Ap luc cao - Van dong manh, tap 6-7 lan/tuan
-                    </SelectItem>
-
-                    <SelectItem value="extremely_active">
-                      Ap luc rat cao - Cong viec giang day, tap the duc hoac
-                      the thao
                     </SelectItem>
                   </SelectContent>
                 </Select>

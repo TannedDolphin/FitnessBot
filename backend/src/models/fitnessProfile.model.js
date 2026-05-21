@@ -36,17 +36,6 @@ const fitnessProfileSchema = new mongoose.Schema(
       enum: ["beginner", "intermediate", "advanced"],
       required: true,
     },
-    activityLevel: {
-      type: String,
-      enum: [
-        "sedentary",
-        "lightly_active",
-        "moderately_active",
-        "very_active",
-        "extremely_active",
-      ],
-      required: true,
-    },
     trainingDaysPerWeek: {
       type: Number,
       required: true,

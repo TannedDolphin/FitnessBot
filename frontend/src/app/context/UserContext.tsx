@@ -10,6 +10,8 @@ export interface FitnessProfile {
   age: number;
   weight: number;
   height: number;
+  gender: string;
+  trainingDaysPerWeek: number;
   fitnessLevel: string;
   goals: string[];
   restrictions: string;
