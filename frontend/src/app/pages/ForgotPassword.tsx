@@ -4,13 +4,6 @@ import { motion } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
 import WebsiteNav from "../components/WebsiteNav";
 import { postJson } from "../lib/api";
 
@@ -27,47 +20,67 @@ export default function ForgotPassword() {
     setIsSubmitting(true);
 
     try {
-      const response = await postJson<{ message: string }>("/api/users/forgot-password", {
-        email,
-      });
+      const response = await postJson<{ message: string }>(
+        "/api/users/forgot-password",
+        {
+          email,
+        },
+      );
 
-      setMessage(response.message || "Nếu email tồn tại, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu.");
+      setMessage(
+        response.message ||
+          "Nếu email tồn tại, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu.",
+      );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Không thể gửi yêu cầu quên mật khẩu.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Không thể gửi yêu cầu quên mật khẩu.",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-[#050816] text-white relative overflow-hidden">
       <WebsiteNav />
 
-      <div className="min-h-screen flex items-center justify-center px-6 pt-20">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
-        />
+      {/* Ambient Orbs */}
+      <motion.div
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl pointer-events-none"
+      />
 
-        <Card className="w-full max-w-md bg-gray-900/50 backdrop-blur-xl border-gray-800 relative z-10">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-3xl font-bold text-center text-white">Quên mật khẩu</CardTitle>
-            <CardDescription className="text-center text-gray-400">
-              Nhập email để nhận hướng dẫn đặt lại mật khẩu.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/8 rounded-full blur-3xl pointer-events-none"
+      />
+
+      <div className="min-h-screen flex items-center justify-center px-6 py-24">
+        <div className="w-full max-w-md relative z-10">
+          <div className="bg-[#0B1120]/80 backdrop-blur-xl border border-white/8 rounded-2xl p-8 shadow-2xl shadow-black/60">
+            <div className="mb-8 text-center">
+              <h1 className="text-3xl font-bold text-slate-100 mb-2">
+                Quên mật khẩu
+              </h1>
+
+              <p className="text-slate-500 text-sm leading-relaxed">
+                Nhập email của bạn để nhận hướng dẫn đặt lại mật khẩu.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-200">
+                <Label
+                  htmlFor="email"
+                  className="text-slate-300 text-sm"
+                >
                   Email
                 </Label>
+
                 <Input
                   id="email"
                   type="email"
@@ -75,16 +88,25 @@ export default function ForgotPassword() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 focus:border-blue-500"
+                  className="bg-[#111827] border-white/8 text-slate-100 placeholder:text-slate-600 focus:border-green-500/50 h-11"
                 />
               </div>
 
-              {message ? <p className="text-sm text-emerald-300">{message}</p> : null}
-              {error ? <p className="text-sm text-red-300">{error}</p> : null}
+              {message ? (
+                <div className="p-3 rounded-xl border border-green-500/20 bg-green-500/10">
+                  <p className="text-sm text-green-400">{message}</p>
+                </div>
+              ) : null}
+
+              {error ? (
+                <div className="p-3 rounded-xl border border-red-500/20 bg-red-500/10">
+                  <p className="text-sm text-red-400">{error}</p>
+                </div>
+              ) : null}
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600"
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/30 transition-all h-11"
                 size="lg"
                 disabled={isSubmitting}
               >
@@ -92,18 +114,22 @@ export default function ForgotPassword() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-gray-400">
-              Đã nhớ mật khẩu? {" "}
-              <Link to="/login" className="text-blue-400 hover:text-blue-300 font-semibold">
+            <div className="mt-6 text-center text-sm text-slate-500">
+              Đã nhớ mật khẩu?{" "}
+              <Link
+                to="/login"
+                className="text-green-400 hover:text-green-300 font-semibold transition-colors"
+              >
                 Quay lại đăng nhập
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      <footer className="py-8 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto text-center text-gray-400 text-sm">
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto text-center text-slate-600 text-sm">
           <p>&copy; 2026 FitAI. Tất cả quyền được bảo lưu.</p>
         </div>
       </footer>
