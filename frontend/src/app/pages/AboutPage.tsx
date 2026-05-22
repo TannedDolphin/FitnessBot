@@ -27,7 +27,7 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="bg-[#050816] text-white min-h-screen">
       <WebsiteNav />
 
       <div className="pt-32 pb-20 px-6">
@@ -39,12 +39,12 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <h1 className="text-7xl md:text-8xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-7xl md:text-8xl font-bold mb-6 tracking-tight">
+              <span className="bg-gradient-to-r from-white to-green-400 bg-clip-text text-transparent">
                 CÂU CHUYỆN CỦA CHÚNG TÔI
               </span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
               FitAI ra đời từ một niềm tin đơn giản: thể dục nên mang tính cá nhân, thông minh
               và trao quyền. Chúng tôi kết hợp công nghệ AI mới nhất với khoa học thể dục đã được chứng minh
               để giúp bạn đạt được kết quả mà bạn chưa bao giờ nghĩ là có thể.
@@ -59,11 +59,11 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="mb-32"
           >
-            <div className="relative p-12 bg-gradient-to-br from-blue-600/10 to-purple-600/10 backdrop-blur-sm border border-blue-500/20 rounded-3xl overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5" />
+            <div className="relative p-12 bg-green-500/5 backdrop-blur-sm border border-green-500/15 rounded-2xl overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-600/5 to-emerald-600/5" />
               <div className="relative z-10 text-center">
-                <h2 className="text-5xl font-bold mb-6">SỨ MỆNH CỦA CHÚNG TÔI</h2>
-                <p className="text-2xl text-gray-200 leading-relaxed max-w-4xl mx-auto">
+                <h2 className="text-5xl font-bold mb-6 tracking-tight">SỨ MỆNH CỦA CHÚNG TÔI</h2>
+                <p className="text-2xl text-slate-300 leading-relaxed max-w-4xl mx-auto">
                   Trao quyền cho các cá nhân trên toàn thế giới kiểm soát hành trình thể dục của họ
                   thông qua công nghệ thông minh, huấn luyện cá nhân hóa và một cộng đồng hỗ trợ.
                 </p>
@@ -79,8 +79,8 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="mb-32"
           >
-            <h2 className="text-6xl font-bold text-center mb-16">GIÁ TRỊ CỦA CHÚNG TÔI</h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <h2 className="text-6xl font-bold text-center mb-16 tracking-tight">GIÁ TRỊ CỦA CHÚNG TÔI</h2>
+            <div className="grid md:grid-cols-2 gap-5">
               {values.map((value, index) => {
                 const Icon = value.icon;
                 return (
@@ -90,15 +90,14 @@ export default function AboutPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="group relative"
+                    className="group"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-300" />
-                    <div className="relative p-8 bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl hover:border-blue-500/30 transition-all duration-300">
-                      <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center mb-6 transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                        <Icon className="w-7 h-7 text-white" />
+                    <div className="relative p-8 bg-[#111827] border border-white/5 rounded-2xl hover:border-green-500/20 hover:shadow-xl hover:shadow-green-500/5 transition-all duration-300">
+                      <div className="w-14 h-14 bg-gradient-to-br from-green-600 to-emerald-500 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-green-500/20 transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                        <Icon className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold mb-3">{value.title}</h3>
-                      <p className="text-gray-400 leading-relaxed">
+                      <h3 className="text-xl font-bold mb-3 text-slate-100">{value.title}</h3>
+                      <p className="text-slate-400 leading-relaxed text-sm">
                         {value.description}
                       </p>
                     </div>
@@ -116,13 +115,13 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h2 className="text-6xl font-bold mb-6">XÂY DỰNG BỞI VẬN ĐỘNG VIÊN</h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
+            <h2 className="text-6xl font-bold mb-6 tracking-tight">XÂY DỰNG BỞI VẬN ĐỘNG VIÊN</h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed mb-12">
               Đội ngũ của chúng tôi kết hợp các vận động viên đẳng cấp thế giới, huấn luyện viên được chứng nhận, chuyên gia dinh dưỡng,
               và kỹ sư AI đam mê giúp bạn thành công. Chúng tôi không chỉ
               xây dựng ứng dụng thể dục—chúng tôi sống và thở lối sống này mỗi ngày.
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-4xl mx-auto">
               {[
                 { value: "15+", label: "Thành viên đội ngũ" },
                 { value: "50+", label: "Năm kinh nghiệm kết hợp" },
@@ -135,10 +134,10 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="p-6 bg-gray-900/30 backdrop-blur-sm border border-gray-800 rounded-xl"
+                  className="p-6 bg-[#111827] border border-white/5 rounded-xl hover:border-green-500/20 transition-colors"
                 >
-                  <div className="text-4xl font-bold text-blue-500 mb-2">{stat.value}</div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
+                  <div className="text-4xl font-bold text-green-400 mb-2">{stat.value}</div>
+                  <div className="text-sm text-slate-500">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -147,8 +146,8 @@ export default function AboutPage() {
       </div>
 
       {/* Footer */}
-      <footer className="py-12 px-6 bg-black border-t border-white/10">
-        <div className="max-w-6xl mx-auto text-center text-gray-400">
+      <footer className="py-12 px-6 bg-[#050816] border-t border-white/5">
+        <div className="max-w-6xl mx-auto text-center text-slate-600 text-sm">
           <p>&copy; 2026 FitAI. Tất cả quyền được bảo lưu.</p>
         </div>
       </footer>

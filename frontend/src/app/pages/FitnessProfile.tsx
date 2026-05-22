@@ -4,13 +4,7 @@ import { motion } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+
 import {
   Select,
   SelectContent,
@@ -24,11 +18,11 @@ import { useUser } from "../context/UserContext";
 import WebsiteNav from "../components/WebsiteNav";
 
 const goalOptions = [
-  "Giam can",
-  "Tang co",
-  "Cai thien suc ben",
-  "Tang tinh linh hoat",
-  "The duc tong quat",
+  "Giảm cân",
+  "Tăng cơ",
+  "Cải thiện sức bền",
+  "Tăng tính linh hoạt",
+  "Thể dục tổng quát",
 ];
 
 const isPositiveNumber = (value: string) => Number(value) > 0;
@@ -74,17 +68,17 @@ export default function FitnessProfile() {
       !isPositiveNumber(weight) ||
       !isPositiveNumber(height)
     ) {
-      setError("Tuoi, can nang va chieu cao phai lon hon 0.");
+      setError("Tuổi, cân nặng và chiều cao phải lớn hơn 0.");
       return;
     }
 
     if (!gender) {
-      setError("Vui long chon gioi tinh.");
+      setError("Vui lòng chọn giới tính.");
       return;
     }
 
     if (!fitnessLevel) {
-      setError("Vui long chon muc do the duc.");
+      setError("Vui lòng chọn mức độ thể dục.");
       return;
     }
 
@@ -92,12 +86,12 @@ export default function FitnessProfile() {
       !isPositiveNumber(trainingDaysPerWeek) ||
       parseInt(trainingDaysPerWeek) > 7
     ) {
-      setError("So ngay tap trong tuan phai tu 1 den 7.");
+      setError("Số ngày tập trong tuần phải từ 1 đến 7.");
       return;
     }
 
     if (goals.length === 0) {
-      setError("Vui long chon it nhat mot muc tieu.");
+      setError("Vui lòng chọn ít nhất một mục tiêu.");
       return;
     }
 
@@ -116,41 +110,41 @@ export default function FitnessProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen bg-[#050816] text-white relative overflow-hidden">
       <WebsiteNav />
 
+      {/* Ambient Orbs */}
+      <motion.div
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl pointer-events-none"
+      />
+
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/8 rounded-full blur-3xl pointer-events-none"
+      />
+
       <div className="min-h-screen flex items-center justify-center px-6 py-24">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"
-        />
+        <div className="w-full max-w-2xl relative z-10">
+          <div className="bg-[#0B1120]/80 backdrop-blur-xl border border-white/8 rounded-2xl p-8 shadow-2xl shadow-black/60">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-slate-100 mb-2">
+                Hồ sơ Thể dục của bạn
+              </h1>
 
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"
-        />
+              <p className="text-slate-500 text-sm">
+                Giúp AI hiểu thể trạng hiện tại và mục tiêu của bạn.
+              </p>
+            </div>
 
-        <Card className="w-full max-w-2xl bg-gray-900/50 backdrop-blur-xl border-gray-800 relative z-10">
-          <CardHeader>
-            <CardTitle className="text-3xl text-white">
-              Ho so the duc cua ban
-            </CardTitle>
-
-            <CardDescription className="text-gray-400">
-              Giup AI hieu the trang hien tai va muc tieu cua ban.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-
-              {/* Tuoi + Gioi tinh */}
+              {/* Tuổi + Giới tính */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="age" className="text-gray-200">
-                    Tuoi
+                  <Label htmlFor="age" className="text-slate-300 text-sm">
+                    Tuổi
                   </Label>
 
                   <Input
@@ -163,36 +157,36 @@ export default function FitnessProfile() {
                     value={age}
                     onChange={handleNumberChange(setAge)}
                     required
-                    className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+                    className="bg-[#111827] border-white/8 text-slate-100 placeholder:text-slate-600 focus:border-green-500/50 h-11"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="gender" className="text-gray-200">
-                    Gioi tinh
+                  <Label htmlFor="gender" className="text-slate-300 text-sm">
+                    Giới tính
                   </Label>
 
                   <Select value={gender} onValueChange={setGender}>
                     <SelectTrigger
                       id="gender"
-                      className="bg-gray-800/50 border-gray-700 text-white"
+                      className="bg-[#111827] border-white/8 text-slate-100 h-11 focus:border-green-500/50"
                     >
-                      <SelectValue placeholder="Chon gioi tinh" />
+                      <SelectValue placeholder="Chọn giới tính" />
                     </SelectTrigger>
 
-                    <SelectContent>
+                    <SelectContent className="bg-[#111827] border-white/10">
                       <SelectItem value="male">Nam</SelectItem>
-                      <SelectItem value="female">Nu</SelectItem>
+                      <SelectItem value="female">Nữ</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              {/* Can nang + Chieu cao */}
+              {/* Cân nặng + Chiều cao */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="weight" className="text-gray-200">
-                    Can nang (kg)
+                  <Label htmlFor="weight" className="text-slate-300 text-sm">
+                    Cân nặng (kg)
                   </Label>
 
                   <Input
@@ -206,13 +200,13 @@ export default function FitnessProfile() {
                     value={weight}
                     onChange={handleNumberChange(setWeight)}
                     required
-                    className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+                    className="bg-[#111827] border-white/8 text-slate-100 placeholder:text-slate-600 focus:border-green-500/50 h-11"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="height" className="text-gray-200">
-                    Chieu cao (cm)
+                  <Label htmlFor="height" className="text-slate-300 text-sm">
+                    Chiều cao (cm)
                   </Label>
 
                   <Input
@@ -225,15 +219,18 @@ export default function FitnessProfile() {
                     value={height}
                     onChange={handleNumberChange(setHeight)}
                     required
-                    className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+                    className="bg-[#111827] border-white/8 text-slate-100 placeholder:text-slate-600 focus:border-green-500/50 h-11"
                   />
                 </div>
               </div>
 
-              {/* So ngay tap / tuan */}
+              {/* Số ngày tập / tuần */}
               <div className="space-y-2">
-                <Label htmlFor="training-days" className="text-gray-200">
-                  So ngay tap / tuan
+                <Label
+                  htmlFor="training-days"
+                  className="text-slate-300 text-sm"
+                >
+                  Số ngày tập / tuần
                 </Label>
 
                 <Input
@@ -246,14 +243,17 @@ export default function FitnessProfile() {
                   value={trainingDaysPerWeek}
                   onChange={handleNumberChange(setTrainingDaysPerWeek)}
                   required
-                  className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+                  className="bg-[#111827] border-white/8 text-slate-100 placeholder:text-slate-600 focus:border-green-500/50 h-11"
                 />
               </div>
 
               {/* Fitness Level */}
               <div className="space-y-2">
-                <Label htmlFor="fitness-level" className="text-gray-200">
-                  Muc do the duc hien tai
+                <Label
+                  htmlFor="fitness-level"
+                  className="text-slate-300 text-sm"
+                >
+                  Mức độ thể dục hiện tại
                 </Label>
 
                 <Select
@@ -262,22 +262,22 @@ export default function FitnessProfile() {
                 >
                   <SelectTrigger
                     id="fitness-level"
-                    className="bg-gray-800/50 border-gray-700 text-white"
+                    className="bg-[#111827] border-white/8 text-slate-100 h-11 focus:border-green-500/50"
                   >
-                    <SelectValue placeholder="Chon muc do the duc" />
+                    <SelectValue placeholder="Chọn mức độ thể dục" />
                   </SelectTrigger>
 
-                  <SelectContent>
+                  <SelectContent className="bg-[#111827] border-white/10">
                     <SelectItem value="beginner">
-                      Moi bat dau
+                      Mới bắt đầu
                     </SelectItem>
 
                     <SelectItem value="intermediate">
-                      Trung cap - Tap luyen thuong xuyen
+                      Trung cấp - Tập luyện thường xuyên
                     </SelectItem>
 
                     <SelectItem value="advanced">
-                      Nang cao - Co kinh nghiem tap luyen
+                      Nâng cao - Có kinh nghiệm tập luyện
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -285,64 +285,76 @@ export default function FitnessProfile() {
 
               {/* Goals */}
               <div className="space-y-3">
-                <Label className="text-gray-200">
-                  Muc tieu the duc (chon tat ca muc phu hop)
+                <Label className="text-slate-300 text-sm">
+                  Mục tiêu thể dục (chọn tất cả mục phù hợp)
                 </Label>
 
-                {goalOptions.map((goal) => (
-                  <div key={goal} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={goal}
-                      checked={goals.includes(goal)}
-                      onCheckedChange={() => toggleGoal(goal)}
-                      className="border-gray-600"
-                    />
-
-                    <Label
+                <div className="grid grid-cols-1 gap-3">
+                  {goalOptions.map((goal) => (
+                    <label
+                      key={goal}
                       htmlFor={goal}
-                      className="font-normal cursor-pointer text-gray-300"
+                      className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all duration-200 ${
+                        goals.includes(goal)
+                          ? "border-green-500/40 bg-green-500/10"
+                          : "border-white/6 bg-[#111827] hover:border-white/12"
+                      }`}
                     >
-                      {goal}
-                    </Label>
-                  </div>
-                ))}
+                      <Checkbox
+                        id={goal}
+                        checked={goals.includes(goal)}
+                        onCheckedChange={() => toggleGoal(goal)}
+                        className="border-slate-600 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500"
+                      />
+
+                      <span className="font-normal text-slate-300 text-sm">
+                        {goal}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               {/* Restrictions */}
               <div className="space-y-2">
-                <Label htmlFor="restrictions" className="text-gray-200">
-                  Han che an uong hoac chan thuong (tuy chon)
+                <Label
+                  htmlFor="restrictions"
+                  className="text-slate-300 text-sm"
+                >
+                  Hạn chế ăn uống hoặc chấn thương (tùy chọn)
                 </Label>
 
                 <Textarea
                   id="restrictions"
-                  placeholder="Vi du: an chay, chan thuong dau goi, di ung dau..."
+                  placeholder="Ví dụ: ăn chay, chấn thương đầu gối, dị ứng đậu..."
                   value={restrictions}
                   onChange={(e) => setRestrictions(e.target.value)}
-                  className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500"
+                  className="bg-[#111827] border-white/8 text-slate-100 placeholder:text-slate-600 focus:border-green-500/50 resize-none"
+                  rows={3}
                 />
               </div>
 
               {error ? (
-                <p className="text-sm text-red-300">{error}</p>
+                <p className="text-sm text-red-400">{error}</p>
               ) : null}
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500"
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/30 transition-all h-11"
                 size="lg"
                 disabled={goals.length === 0}
               >
-                Tao ke hoach AI cua toi
+                Tạo kế hoạch AI của tôi
               </Button>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      <footer className="py-8 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto text-center text-gray-400 text-sm">
-          <p>&copy; 2026 FitAI. Tat ca quyen duoc bao luu.</p>
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto text-center text-slate-600 text-sm">
+          <p>&copy; 2026 FitAI. Tất cả quyền được bảo lưu.</p>
         </div>
       </footer>
     </div>

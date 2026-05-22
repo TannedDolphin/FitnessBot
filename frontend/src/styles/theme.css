@@ -1,81 +1,66 @@
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
+  /* Core — Matte Black Dark Mode */
+  --background: #050816;
+  --foreground: #F8FAFC;
+
+  /* Card & Surface */
+  --card: #111827;
+  --card-foreground: #F8FAFC;
+  --popover: #111827;
+  --popover-foreground: #F8FAFC;
+
+  /* Primary — Emerald Green */
+  --primary: #22C55E;
+  --primary-foreground: #050816;
+  --primary-glow: rgba(34, 197, 94, 0.18);
+
+  /* Secondary — Dark Green */
+  --secondary: #15803D;
+  --secondary-foreground: #F8FAFC;
+  --secondary-glow: rgba(21, 128, 61, 0.25);
+
+  /* Muted & Accent */
+  --muted: #1A2333;
+  --muted-foreground: #94A3B8;
+  --accent: #4ADE80;
+  --accent-foreground: #050816;
+
+  /* Destructive */
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  /* Borders & Inputs */
+  --border: rgba(255, 255, 255, 0.06);
+  --input: #0B1120;
+  --input-background: #0B1120;
+  --switch-background: #1A2333;
+  --ring: #22C55E;
+
+  /* Typography */
+  --font-weight-medium: 600;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+
+  /* Border Radius */
+  --radius: 0.75rem;
+
+  /* Charts */
+  --chart-1: #22C55E;
+  --chart-2: #4ADE80;
+  --chart-3: #86EFAC;
+  --chart-4: #F59E0B;
+  --chart-5: #EF4444;
+
+  /* Sidebar */
+  --sidebar: #0F172A;
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-primary: #22C55E;
+  --sidebar-primary-foreground: #050816;
+  --sidebar-accent: #1A2333;
+  --sidebar-accent-foreground: #F8FAFC;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #22C55E;
 }
 
 @theme inline {
@@ -125,13 +110,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
-
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
 
   html {
     font-size: var(--font-size);
@@ -140,19 +120,21 @@
   h1 {
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
   }
 
   h2 {
     font-size: var(--text-xl);
     font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
   }
 
   h3 {
     font-size: var(--text-lg);
     font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    line-height: 1.4;
   }
 
   h4 {
@@ -162,7 +144,7 @@
   }
 
   label {
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
@@ -177,5 +159,35 @@
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
+  }
+}
+
+/* Glow & Gradient Utilities */
+@layer utilities {
+  .glow-primary {
+    box-shadow: 0 0 24px var(--primary-glow), 0 0 48px rgba(34, 197, 94, 0.08);
+  }
+
+  .glow-secondary {
+    box-shadow: 0 0 20px var(--secondary-glow);
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, #22C55E 0%, #4ADE80 100%);
+  }
+
+  .gradient-secondary {
+    background: linear-gradient(135deg, #15803D 0%, #22C55E 100%);
+  }
+
+  .gradient-accent {
+    background: linear-gradient(135deg, #16A34A 0%, #059669 100%);
+  }
+
+  /* Layered deep background for dashboard sections */
+  .bg-deep {
+    background: radial-gradient(ellipse at top left, rgba(34, 197, 94, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at bottom right, rgba(5, 150, 105, 0.04) 0%, transparent 60%),
+                #050816;
   }
 }
