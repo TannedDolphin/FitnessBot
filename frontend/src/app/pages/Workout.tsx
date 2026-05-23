@@ -12,6 +12,16 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Checkbox } from "../components/ui/checkbox";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
+import {
   Tabs,
   TabsContent,
   TabsList,
@@ -40,6 +50,19 @@ export default function WorkoutNew() {
 
   const [completedExercises, setCompletedExercises] =
     useState<Set<string>>(new Set());
+
+  const [deleteExerciseTarget, setDeleteExerciseTarget] =
+    useState<{
+      dayId: string;
+      exerciseId: string;
+      exerciseName: string;
+    } | null>(null);
+
+  const [deleteDayTarget, setDeleteDayTarget] =
+    useState<{
+      dayId: string;
+      dayName: string;
+    } | null>(null);
 
   // Exercise dialog state
   const [exerciseDialogOpen, setExerciseDialogOpen] =
@@ -173,17 +196,17 @@ export default function WorkoutNew() {
     setExerciseDialogOpen(false);
   };
 
-  const handleDeleteExercise = (
-    dayId: string,
-    exerciseId: string,
-  ) => {
-    if (
-      confirm("Bạn có chắc muốn xóa bài tập này?")
-    ) {
-      deleteExercise(dayId, exerciseId);
+  const handleDeleteExercise = () => {
+    if (!deleteExerciseTarget) return;
 
-      toast.success("Đã xóa bài tập");
-    }
+    deleteExercise(
+      deleteExerciseTarget.dayId,
+      deleteExerciseTarget.exerciseId,
+    );
+
+    toast.success("Đã xóa bài tập");
+
+    setDeleteExerciseTarget(null);
   };
 
   const handleAddWorkoutDay = () => {
@@ -207,16 +230,14 @@ export default function WorkoutNew() {
     toast.success("Đã thêm ngày tập mới");
   };
 
-  const handleDeleteWorkoutDay = (
-    dayId: string,
-  ) => {
-    if (
-      confirm("Bạn có chắc muốn xóa ngày tập này?")
-    ) {
-      deleteWorkoutDay(dayId);
+  const handleDeleteWorkoutDay = () => {
+    if (!deleteDayTarget) return;
 
-      toast.success("Đã xóa ngày tập");
-    }
+    deleteWorkoutDay(deleteDayTarget.dayId);
+
+    toast.success("Đã xóa ngày tập");
+
+    setDeleteDayTarget(null);
   };
 
   return (
@@ -322,9 +343,10 @@ export default function WorkoutNew() {
                         variant="ghost"
                         size="sm"
                         onClick={() =>
-                          handleDeleteWorkoutDay(
-                            day.id,
-                          )
+                          setDeleteDayTarget({
+                            dayId: day.id,
+                            dayName: day.day,
+                          })
                         }
                         className="h-8 w-8 p-0 text-slate-600 hover:text-red-400 hover:bg-red-500/10"
                       >
@@ -423,10 +445,11 @@ export default function WorkoutNew() {
                               variant="ghost"
                               size="sm"
                               onClick={() =>
-                                handleDeleteExercise(
-                                  day.id,
-                                  exercise.id,
-                                )
+                                setDeleteExerciseTarget({
+                                  dayId: day.id,
+                                  exerciseId: exercise.id,
+                                  exerciseName: exercise.name,
+                                })
                               }
                               className="h-8 w-8 p-0 text-slate-600 hover:text-red-400 hover:bg-red-500/10"
                             >
@@ -647,6 +670,83 @@ export default function WorkoutNew() {
           </div>
         </DialogContent>
       </Dialog>
+    {/* DELETE EXERCISE DIALOG */}
+    <AlertDialog
+      open={!!deleteExerciseTarget}
+      onOpenChange={(open) => {
+        if (!open) {
+          setDeleteExerciseTarget(null);
+        }
+      }}
+    >
+      <AlertDialogContent className="bg-[#111827] border border-white/10 text-white rounded-2xl">
+        <AlertDialogHeader>
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 border border-red-500/20">
+            <Trash2 className="h-6 w-6 text-red-400" />
+          </div>
+          <AlertDialogTitle className="text-center text-lg">
+            Xóa bài tập?
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-center text-slate-400 leading-relaxed">
+            Bài tập{" "}
+            <span className="text-white font-medium">
+              {deleteExerciseTarget?.exerciseName}
+            </span>{" "}
+            sẽ bị xóa khỏi lịch tập.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="flex-row gap-2 sm:justify-center">
+          <AlertDialogCancel className="border-white/10 bg-[#0B1120] text-slate-300 hover:bg-white/5 hover:text-white">
+            Hủy
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleDeleteExercise}
+            className="bg-red-500 hover:bg-red-400 text-white"
+          >
+            Xóa bài tập
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    {/* DELETE DAY DIALOG */}
+    <AlertDialog
+      open={!!deleteDayTarget}
+      onOpenChange={(open) => {
+        if (!open) {
+          setDeleteDayTarget(null);
+        }
+      }}
+    >
+      <AlertDialogContent className="bg-[#111827] border border-white/10 text-white rounded-2xl">
+        <AlertDialogHeader>
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 border border-red-500/20">
+            <Trash2 className="h-6 w-6 text-red-400" />
+          </div>
+          <AlertDialogTitle className="text-center text-lg">
+            Xóa ngày tập?
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-center text-slate-400 leading-relaxed">
+            Toàn bộ dữ liệu của{" "}
+            <span className="text-white font-medium">
+              {deleteDayTarget?.dayName}
+            </span>{" "}
+            sẽ bị xóa.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="flex-row gap-2 sm:justify-center">
+          <AlertDialogCancel className="border-white/10 bg-[#0B1120] text-slate-300 hover:bg-white/5 hover:text-white">
+            Hủy
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleDeleteWorkoutDay}
+            className="bg-red-500 hover:bg-red-400 text-white"
+          >
+            Xóa ngày tập
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
     </div>
   );
 }
