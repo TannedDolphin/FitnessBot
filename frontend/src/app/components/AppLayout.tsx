@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router";
 import { Button } from "./ui/button";
-import AIChatWidget from "./AIChatWidget";
 import { Dumbbell, Apple, User, LayoutDashboard, Menu, X, Zap } from "lucide-react";
 import { useState } from "react";
 
@@ -121,8 +120,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {children}
       </main>
 
-      {/* AI Chat Widget */}
-      <AIChatWidget />
     </div>
   );
 }

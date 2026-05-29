@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Badge } from "../components/ui/badge";
 import { useUser } from "../context/UserContext";
 import { Plus, TrendingUp, CheckCircle2 } from "lucide-react";
+import ExerciseAIMenu from "../components/ExerciseAIMenu";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -99,24 +100,30 @@ export default function Dashboard() {
                         {day.exercises.map((exercise) => (
                           <div
                             key={exercise.id}
-                            className="flex items-center justify-between bg-[#1A2333] hover:bg-[#1E293B] p-3 rounded-lg transition-colors"
+                            className="flex items-center justify-between gap-2 bg-[#1A2333] hover:bg-[#1E293B] p-3 rounded-lg transition-colors"
                           >
-                            <span className="font-medium text-sm text-slate-200">
+                            <span className="min-w-0 flex-1 font-medium text-sm text-slate-200">
                               {exercise.name}
                             </span>
 
-                            <div className="flex gap-3 text-xs text-slate-400">
-                              <span className="bg-green-500/10 text-green-400 px-2 py-1 rounded-md">
-                                {exercise.sets} hiệp
-                              </span>
+                            <div className="flex shrink-0 items-center gap-2 flex-wrap justify-end">
+                              <div className="flex gap-2 text-xs text-slate-400 flex-wrap justify-end">
+                                <span className="bg-green-500/10 text-green-400 px-2 py-1 rounded-md border border-green-500/10">
+                                  {exercise.sets} hiệp
+                                </span>
 
-                              <span className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-md">
-                                {exercise.reps} lần
-                              </span>
+                                <span className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-md border border-emerald-500/10">
+                                  {exercise.reps} lần
+                                </span>
 
-                              <span className="bg-slate-700/50 text-slate-400 px-2 py-1 rounded-md">
-                                Nghỉ {exercise.rest}
-                              </span>
+                                <span className="bg-slate-700/50 text-slate-300 px-2 py-1 rounded-md border border-white/5">
+                                  Nghỉ {exercise.rest}
+                                </span>
+                              </div>
+
+                              <ExerciseAIMenu
+                                exerciseName={exercise.name}
+                              />
                             </div>
                           </div>
                         ))}
