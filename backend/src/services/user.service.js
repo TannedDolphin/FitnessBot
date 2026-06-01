@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 import { Plan } from "../models/plan.model.js";
+import { consumeVerifiedOtp } from "./otp.service.js";
 
 const isMongoReady = () => mongoose.connection.readyState === 1;
 
@@ -17,8 +18,11 @@ export const registerUser = async ({ name, email, password }) => {
   }
 
   const normalizedEmail = email.trim().toLowerCase();
-  const existingUser = await User.findOne({ email: normalizedEmail });
 
+  // Kiểm tra OTP đã verified
+  await consumeVerifiedOtp(normalizedEmail, "register");
+
+  const existingUser = await User.findOne({ email: normalizedEmail });
   if (existingUser) {
     throw new Error("Email already exists");
   }
@@ -73,11 +77,9 @@ export const requestPasswordReset = async ({ email }) => {
   if (!isMongoReady()) {
     throw new Error("MongoDB is not connected");
   }
-
+  // OTP đã được gửi bởi OTP controller; hàm này chỉ giữ lại để tương thích
   const normalizedEmail = email.trim().toLowerCase();
   await User.findOne({ email: normalizedEmail });
-
-  // In a full implementation, send an email with a reset link or token here.
   return;
 };
 
@@ -93,9 +95,32 @@ export const changeUserPassword = async ({ email, currentPassword, newPassword }
   }
 
   const isValidPassword = await bcrypt.compare(currentPassword, user.passwordHash);
-
   if (!isValidPassword) {
     throw new Error("Invalid email or password");
+  }
+
+  // Kiểm tra OTP đã verified
+  await consumeVerifiedOtp(email.trim().toLowerCase(), "change-password");
+
+  user.passwordHash = await bcrypt.hash(newPassword, 10);
+  await user.save();
+
+  return toPublicUser(user);
+};
+
+export const resetPassword = async ({ email, newPassword }) => {
+  if (!isMongoReady()) {
+    throw new Error("MongoDB is not connected");
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // Kiểm tra OTP đã verified
+  await consumeVerifiedOtp(normalizedEmail, "forgot-password");
+
+  const user = await User.findOne({ email: normalizedEmail });
+  if (!user) {
+    throw new Error("Tài khoản không tồn tại.");
   }
 
   user.passwordHash = await bcrypt.hash(newPassword, 10);

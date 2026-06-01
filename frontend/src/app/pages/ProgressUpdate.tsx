@@ -7,17 +7,23 @@ import { Textarea } from "../components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Switch } from "../components/ui/switch";
 import { useUser } from "../context/UserContext";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, TrendingDown, TrendingUp, Minus } from "lucide-react";
 
 export default function ProgressUpdate() {
   const navigate = useNavigate();
-  const { addProgress, fitnessProfile } = useUser();
+  const { addProgress, fitnessProfile, updateWeight } = useUser();
   const [weight, setWeight] = useState(fitnessProfile?.weight.toString() || "");
   const [workoutCompleted, setWorkoutCompleted] = useState(false);
   const [notes, setNotes] = useState("");
 
+  const currentWeight = fitnessProfile?.weight ?? null;
+  const newWeight = weight ? parseFloat(weight) : null;
+  const weightDiff = currentWeight !== null && newWeight !== null ? newWeight - currentWeight : null;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const parsedWeight = parseFloat(weight);
 
     const today = new Date().toLocaleDateString("en-US", {
       year: "numeric",
@@ -27,10 +33,15 @@ export default function ProgressUpdate() {
 
     addProgress({
       date: today,
-      weight: parseFloat(weight),
+      weight: parsedWeight,
       workoutCompleted,
       notes,
     });
+
+    // Cập nhật cân nặng mới vào hồ sơ thể hình
+    if (!isNaN(parsedWeight) && parsedWeight !== currentWeight) {
+      updateWeight(parsedWeight);
+    }
 
     navigate("/dashboard");
   };
@@ -65,28 +76,55 @@ export default function ProgressUpdate() {
                 id="weight"
                 type="number"
                 step="0.1"
+                min={25}
+                max={300}
                 placeholder="70.0"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 required
                 className="bg-[#0B1120] border-white/8 text-slate-100 placeholder:text-slate-600 focus:border-green-500/50 h-11"
               />
+
+              {/* So sánh với cân nặng trước */}
+              {currentWeight !== null && newWeight !== null && !isNaN(newWeight) && weightDiff !== null && (
+                <div className={`flex items-center gap-2 text-sm px-3 py-2 rounded-lg border ${
+                  weightDiff < 0
+                    ? "bg-green-500/8 border-green-500/20 text-green-400"
+                    : weightDiff > 0
+                    ? "bg-amber-500/8 border-amber-500/20 text-amber-400"
+                    : "bg-slate-500/8 border-slate-500/20 text-slate-400"
+                }`}>
+                  {weightDiff < 0 ? (
+                    <TrendingDown className="h-4 w-4 shrink-0" />
+                  ) : weightDiff > 0 ? (
+                    <TrendingUp className="h-4 w-4 shrink-0" />
+                  ) : (
+                    <Minus className="h-4 w-4 shrink-0" />
+                  )}
+                  <span>
+                    {weightDiff === 0
+                      ? `Không thay đổi so với lần trước (${currentWeight} kg)`
+                      : `${weightDiff > 0 ? "+" : ""}${weightDiff.toFixed(1)} kg so với hồ sơ (${currentWeight} kg)`}
+                  </span>
+                </div>
+              )}
+
+              {currentWeight !== null && newWeight !== null && !isNaN(newWeight) && weightDiff !== 0 && (
+                <p className="text-xs text-slate-500 px-1">
+                  Hồ sơ thể hình sẽ được cập nhật sang <span className="text-slate-300 font-medium">{newWeight} kg</span> sau khi lưu.
+                </p>
+              )}
             </div>
 
             <div className="flex items-center justify-between p-4 border border-white/5 rounded-xl bg-[#0B1120]">
               <div className="space-y-0.5">
-                <Label
-                  htmlFor="workout-completed"
-                  className="text-slate-200 text-sm"
-                >
+                <Label htmlFor="workout-completed" className="text-slate-200 text-sm">
                   Hoàn thành buổi tập hôm nay
                 </Label>
-
                 <p className="text-sm text-slate-500">
                   Đánh dấu nếu bạn đã hoàn thành bài tập theo lịch
                 </p>
               </div>
-
               <Switch
                 id="workout-completed"
                 checked={workoutCompleted}
@@ -99,7 +137,6 @@ export default function ProgressUpdate() {
               <Label htmlFor="notes" className="text-slate-300 text-sm">
                 Ghi chú (tùy chọn)
               </Label>
-
               <Textarea
                 id="notes"
                 placeholder="Bạn cảm thấy thế nào? Có thử thách hoặc thành tích nào hôm nay không?"
@@ -112,11 +149,8 @@ export default function ProgressUpdate() {
 
             <div className="flex items-start gap-3 p-4 bg-green-500/5 border border-green-500/15 rounded-xl">
               <Sparkles className="h-4 w-4 text-green-400 mt-0.5 shrink-0" />
-
               <p className="text-sm text-slate-400 leading-relaxed">
-                <span className="text-green-400 font-medium">
-                  Điều chỉnh AI:
-                </span>{" "}
+                <span className="text-green-400 font-medium">Điều chỉnh AI:</span>{" "}
                 Dựa trên tiến độ của bạn, AI sẽ phân tích dữ liệu và tự động
                 điều chỉnh cường độ tập luyện cũng như mục tiêu dinh dưỡng để
                 đạt kết quả tối ưu.

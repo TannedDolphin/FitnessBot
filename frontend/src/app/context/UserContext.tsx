@@ -75,6 +75,7 @@ interface UserContextType {
   addMeal: (meal: Omit<Meal, 'id'>) => void;
   updateMeal: (mealId: string, meal: Omit<Meal, 'id'>) => void;
   deleteMeal: (mealId: string) => void;
+  updateWeight: (newWeight: number) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -271,6 +272,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const updateWeight = (newWeight: number) => {
+    setFitnessProfileState(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, weight: newWeight };
+      window.localStorage.setItem("fitai_fitness_profile", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -293,6 +303,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         addMeal,
         updateMeal,
         deleteMeal,
+        updateWeight,
       }}
     >
       {children}
