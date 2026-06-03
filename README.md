@@ -243,11 +243,22 @@ Tạo file `.env`
 
 ```env
 PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/fitness-app
-COHERE_API_KEY=YOUR_API_KEY
-COHERE_MODEL=command-r-plus
+
+# MongoDB
+MONGO_URI=your_mongodb_connection_string
+
+# Cohere AI
+COHERE_API_KEY=your_cohere_api_key
+COHERE_MODEL=your_cohere_model
+
+# Frontend URL
 CLIENT_ORIGIN=http://localhost:5173
+
+# Gmail SMTP
+GMAIL_USER=your_gmail@gmail.com
+GMAIL_APP_PASS=your_gmail_app_password
 ```
+
 
 Khởi động Backend
 
@@ -302,6 +313,24 @@ Trong tương lai, hệ thống sẽ được mở rộng với:
 * Tích hợp hệ thống gợi ý nâng cao.
 
 ---
+### Cấu hình Gmail App Password
+
+Để sử dụng chức năng gửi email (OTP, quên mật khẩu, thông báo...), cần:
+
+1. Bật xác thực 2 lớp cho tài khoản Gmail.
+2. Truy cập Google Account → Security → App Passwords.
+3. Tạo App Password mới.
+4. Điền thông tin vào file `.env`:
+
+```env
+GMAIL_USER=your_gmail@gmail.com
+GMAIL_APP_PASS=your_gmail_app_password
+```
+
+Lưu ý: Không commit file `.env` lên GitHub để tránh lộ thông tin bảo mật.
+
+```
+```
 
 ## Thành viên thực hiện
 
