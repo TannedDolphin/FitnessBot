@@ -42,7 +42,7 @@ Người dùng có thể cung cấp:
 
 Hệ thống sử dụng AI để tạo:
 
-* Lịch tập từ 3 - 5 ngày
+* Lịch tập từ 1 - 7 buổi / tuần
 * Danh sách bài tập phù hợp
 * Số hiệp (Sets)
 * Số lần lặp (Reps)
